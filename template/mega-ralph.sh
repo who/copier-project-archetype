@@ -5,6 +5,9 @@
 #   iterations_per_task: Max iterations for ralph.sh per task (default: 10)
 #   idle_sleep: Seconds to sleep when no work available (default: 60)
 #
+# Logs are written to logs/ralph-<timestamp>.log (one per task)
+# Watch live with: tail -f logs/ralph-*.log
+#
 # Exit codes from ralph.sh:
 #   0 - Task completed, check for more work
 #   1 - Error, stop the loop
@@ -18,6 +21,7 @@ echo "=== Mega Ralph Started ==="
 echo "Iterations per task: $ITERATIONS_PER_TASK"
 echo "Idle sleep: ${IDLE_SLEEP}s"
 echo "Task delay: ${TASK_DELAY}s"
+echo "Watch logs: tail -f logs/ralph-*.log"
 echo ""
 
 tasks_completed=0
@@ -25,7 +29,7 @@ tasks_completed=0
 while true; do
   echo ""
   echo "========================================"
-  echo "$(date '+%Y-%m-%d %H:%M:%S') - Checking for work..."
+  echo "$(date '+%Y-%m-%dT%H:%M:%S%z') - Checking for work..."
   echo "========================================"
 
   ./ralph.sh "$ITERATIONS_PER_TASK"
