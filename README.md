@@ -56,17 +56,7 @@ See [prd/PRD-PROMPT.md](prd/PRD-PROMPT.md) for the full prompt template.
 
 ### Step 3: Import PRD into Beads
 
-Convert your PRD into executable work items:
-
-```bash
-# In a Claude session, run the Phase 4 beads conversion prompt
-claude
-
-# Reference your PRD and ask Claude to generate beads
-# This creates prd/beads-setup-[project-name].sh
-```
-
-Then run the generated script:
+Convert your PRD into executable work items. Open a Claude session and use the Phase 4 prompt from `prd/PRD-PROMPT.md` to generate a beads setup script. Then run it:
 
 ```bash
 chmod +x prd/beads-setup-*.sh
