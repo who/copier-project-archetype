@@ -1,145 +1,114 @@
 # Project Archetype
 
-A Copier template for scaffolding new projects with built-in AI-assisted development workflows.
+A Copier template for scaffolding new projects with AI-assisted development workflows.
+
+## Quick Start
+
+### Step 1: Generate Your Project
+
+```bash
+copier copy gh:who/copier-project-archetype ./my-project
+cd my-project
+```
+
+The generator will:
+- Ask you about your project (name, language, framework, etc.)
+- Scaffold the project structure
+- Initialize git and beads automatically
+
+You now have a blank slate ready for development.
+
+### Step 2: Generate Your PRD
+
+Define what you're building by creating a PRD (Product Requirements Document). Use the included prompt template with your seed idea:
+
+```bash
+# Open a Claude session and paste the PRD prompt with your idea
+claude
+
+# In Claude, use the PRD-PROMPT template:
+# "I want to build [YOUR IDEA HERE]..."
+```
+
+Or use the helper script:
+
+```bash
+./generate-prd.sh "A CLI tool that converts markdown to PDF with custom themes"
+```
+
+This starts an interactive session where Claude will:
+1. Interview you about your idea (3-5 questions at a time)
+2. Generate a structured PRD document
+3. Iterate up to 5 times to refine it
+4. Save the result to `prd/PRD-[project-name].md`
+
+See [prd/PRD-PROMPT.md](prd/PRD-PROMPT.md) for the full prompt template.
+
+### Step 3: Import PRD into Beads
+
+Convert your PRD into executable work items:
+
+```bash
+# In a Claude session, run the Phase 4 beads conversion prompt
+claude
+
+# Reference your PRD and ask Claude to generate beads
+# This creates prd/beads-setup-[project-name].sh
+```
+
+Then run the generated script:
+
+```bash
+chmod +x prd/beads-setup-*.sh
+./prd/beads-setup-*.sh
+```
+
+Verify your work queue:
+
+```bash
+bd list                    # See all issues
+bd ready                   # See what's ready to work on
+bd dep tree <epic-id>      # Visualize dependencies
+```
+
+### Step 4: Run Ralph
+
+Execute work through the Ralph automation loop:
+
+```bash
+# Single task execution
+./ralph.sh
+
+# Continuous execution until queue is empty
+./mega-ralph.sh
+```
+
+Ralph will:
+1. Find the next ready task (`bd ready`)
+2. Claim and implement it
+3. Run verification (tests, linting)
+4. Commit and push changes
+5. Mark the task complete
 
 ## What You Get
-
-- **Beads issue tracking** - Git-native issue management with `bd` CLI
-- **Claude Code integration** - Pre-configured CLAUDE.md with AI guidance
-- **Ralph loops** - Automated task execution via `ralph.sh` and `mega-ralph.sh`
-- **PRD templates** - Structured product requirements workflow
-- **GitHub Actions CI** - Language-specific CI pipelines
-- **Code quality tools** - Linter configurations per language
-
-## Usage
-
-```bash
-copier copy ~/code/copier-project-archetype ./my-new-project
-```
-
-Or from a git remote:
-
-```bash
-copier copy gh:username/copier-project-archetype ./my-new-project
-```
-
-### Wizard Prompts
-
-| Prompt | Description |
-|--------|-------------|
-| `project_name` | Lowercase name with hyphens (e.g., `my-api`) |
-| `project_description` | Short project description |
-| `author_name` | Your name |
-| `author_email` | Your email |
-| `language` | Python, TypeScript, Go, Rust, or Other |
-| `package_manager` | Language-specific (uv, npm, cargo, etc.) |
-| `framework` | Optional web framework |
-| `linter` | Code linter (ruff, eslint, clippy, etc.) |
-| `github_username` | For repository URL |
-| `license` | MIT, Apache-2.0, GPL-3.0, etc. |
-
-## Requirements
-
-### System Dependencies
-
-Install these tools before using generated projects:
-
-| Tool | Purpose | Install |
-|------|---------|---------|
-| **beads** | Issue tracking | `cargo install beads` or [releases](https://github.com/Dicklesworthstone/beads) |
-| **bv** | Beads TUI viewer | `cargo install beads_viewer` or [releases](https://github.com/Dicklesworthstone/beads_viewer) |
-| **claude** | Claude CLI | `npm install -g @anthropic-ai/claude-cli` |
-| **rg** | Fast search (ripgrep) | `apt install ripgrep` / `brew install ripgrep` |
-| **fd** | Fast find | `apt install fd-find` / `brew install fd` |
-| **jq** | JSON processing | `apt install jq` / `brew install jq` |
-
-### Language-Specific
-
-**Python:**
-```bash
-# uv (recommended)
-curl -LsSf https://astral.sh/uv/install.sh | sh
-
-# ruff
-uv tool install ruff
-```
-
-**TypeScript/Node.js:**
-```bash
-# Node.js 20+
-# npm/pnpm/yarn
-```
-
-**Go:**
-```bash
-# Go 1.22+
-go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
-```
-
-**Rust:**
-```bash
-# Rust via rustup
-rustup component add clippy rustfmt
-```
-
-## Generated Project Structure
 
 ```
 my-project/
 ├── .beads/                 # Issue tracking database
-│   ├── config.yaml
-│   └── .gitignore
-├── .claude/
-│   └── settings.json       # Claude Code permissions
-├── .github/
-│   └── workflows/
-│       └── ci.yml          # GitHub Actions CI
+├── .claude/                # Claude Code permissions
+├── .github/workflows/      # CI pipeline
 ├── prd/
-│   ├── PRD-PROMPT.md       # PRD generation template
-│   └── .gitkeep
-├── src/
-│   └── .gitkeep
-├── .gitignore              # Language-specific ignores
-├── .mcp.json               # MCP server config
-├── AGENTS.md               # Session protocol
+│   └── PRD-PROMPT.md       # PRD generation template
+├── src/                    # Your code goes here
 ├── CLAUDE.md               # AI guidance
 ├── PROMPT.md               # Ralph loop instructions
 ├── activity.md             # Work log
-├── mega-ralph.sh           # Continuous task runner
-└── ralph.sh                # Single task runner
+├── generate-prd.sh         # PRD generation helper
+├── ralph.sh                # Single task runner
+└── mega-ralph.sh           # Continuous task runner
 ```
-## Workflows
-
-### Ralph Loop (Single Task)
-
-```bash
-./ralph.sh [max_iterations]
-```
-
-Executes one beads task:
-1. Finds ready work (`bd ready`)
-2. Claims highest priority task
-3. Implements the change
-4. Runs verification
-5. Commits and pushes
-
-### Mega Ralph (Continuous)
-
-```bash
-./mega-ralph.sh [iterations_per_task] [idle_sleep]
-```
-
-Continuously processes tasks until queue is empty.
-
-### PRD Generation
-
-1. Edit `prd/PRD-PROMPT.md` with your topic
-2. Run with Claude to generate structured PRD
-3. Convert PRD to beads issues using Phase 4 prompt
 
 ## Work Execution Policy
-
-Generated projects enforce:
 
 > **All implementation work MUST go through Ralph loops.**
 
@@ -147,6 +116,25 @@ Generated projects enforce:
 - Create beads issues instead of implementing directly
 - Ralph loops execute the actual work
 - Research and planning are allowed without Ralph
+
+## Requirements
+
+Install these tools before using generated projects:
+
+| Tool | Purpose | Install |
+|------|---------|---------|
+| **copier** | Project generator | `uv tool install copier` |
+| **beads** | Issue tracking | `cargo install beads` |
+| **bv** | Beads TUI viewer | `cargo install beads_viewer` |
+| **claude** | Claude CLI | `npm install -g @anthropic-ai/claude-cli` |
+| **jq** | JSON processing | `apt install jq` / `brew install jq` |
+
+### Language-Specific Tools
+
+**Python:** `uv`, `ruff`
+**TypeScript:** Node.js 20+, npm/pnpm/yarn/bun
+**Go:** Go 1.22+, golangci-lint
+**Rust:** rustup, clippy, rustfmt
 
 ## License
 

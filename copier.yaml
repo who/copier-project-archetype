@@ -14,9 +14,8 @@ _message_after_copy: |
 
   Next steps:
     cd {{ _copier_conf.dst_path }}
-    git init
-    bd init
-    # Start working with: ./ralph.sh
+    ./generate-prd.sh "Your project idea here"
+    # Then import the PRD into beads and run ./ralph.sh
 
 # =============================================================================
 # Project Basics
@@ -143,6 +142,6 @@ _skip_if_exists:
   - ".beads/*"
 
 _tasks:
-  - "chmod +x ralph.sh"
+  - "chmod +x ralph.sh mega-ralph.sh generate-prd.sh"
   - "git init"
   - "bd init"
