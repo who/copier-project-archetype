@@ -128,6 +128,8 @@ Install these tools before using generated projects:
 | [bv](https://github.com/Dicklesworthstone/beads_viewer) | Beads TUI viewer |
 | [claude](https://github.com/anthropics/claude-code) | Claude CLI |
 | [jq](https://jqlang.github.io/jq/) | JSON processing |
+| [rg](https://github.com/BurntSushi/ripgrep) | Fast search (ripgrep) |
+| [fd](https://github.com/sharkdp/fd) | Fast file finder |
 
 ### Language-Specific Tools
 
