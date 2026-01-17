@@ -1,13 +1,23 @@
-# Project Archetype
+# Ortus
 
-A Copier template for scaffolding new projects with AI-assisted development workflows.
+*Ortus* (Latin: "rising, origin, birth") — the point from which something springs into being.
+
+An opinionated [Copier](https://github.com/copier-org/copier) template for scaffolding new projects with AI-assisted development workflows.
 
 ## Quick Start
+
+### Prerequisites
+
+```bash
+# Install Copier
+uv tool install copier
+# or: pipx install copier
+```
 
 ### Step 1: Generate Your Project
 
 ```bash
-copier copy gh:who/copier-project-archetype ./my-project
+copier copy gh:who/ortus ./my-project
 cd my-project
 ```
 
@@ -121,20 +131,20 @@ my-project/
 
 Install these tools before using generated projects:
 
-| Tool | Purpose | Install |
-|------|---------|---------|
-| **copier** | Project generator | `uv tool install copier` |
-| **beads** | Issue tracking | `cargo install beads` |
-| **bv** | Beads TUI viewer | `cargo install beads_viewer` |
-| **claude** | Claude CLI | `npm install -g @anthropic-ai/claude-cli` |
-| **jq** | JSON processing | `apt install jq` / `brew install jq` |
+| Tool | Purpose |
+|------|---------|
+| [copier](https://github.com/copier-org/copier) | Project generator |
+| [beads](https://github.com/Dicklesworthstone/beads) | Issue tracking |
+| [bv](https://github.com/Dicklesworthstone/beads_viewer) | Beads TUI viewer |
+| [claude](https://github.com/anthropics/claude-code) | Claude CLI |
+| [jq](https://jqlang.github.io/jq/) | JSON processing |
 
 ### Language-Specific Tools
 
-**Python:** `uv`, `ruff`
-**TypeScript:** Node.js 20+, npm/pnpm/yarn/bun
-**Go:** Go 1.22+, golangci-lint
-**Rust:** rustup, clippy, rustfmt
+- **Python:** [uv](https://github.com/astral-sh/uv), [ruff](https://github.com/astral-sh/ruff)
+- **TypeScript:** Node.js 20+, npm/pnpm/yarn/bun
+- **Go:** Go 1.22+, [golangci-lint](https://github.com/golangci/golangci-lint)
+- **Rust:** [rustup](https://rustup.rs/), clippy, rustfmt
 
 ## License
 

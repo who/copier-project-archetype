@@ -1,7 +1,7 @@
 _min_copier_version: "9.0.0"
 
 _message_before_copy: |
-  Welcome to the Project Archetype generator!
+  Welcome to Ortus — the origin of your next project.
 
   This will create a new project with:
   - Beads issue tracking
