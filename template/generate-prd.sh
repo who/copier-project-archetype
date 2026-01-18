@@ -38,8 +38,8 @@ echo "The final document will be saved to prd/PRD-[project-name].md"
 echo ""
 
 # Start Claude with the PRD prompt and seed idea
-claude --print "I want to create a Product Requirements Document (PRD) for the following topic:
+claude -p "I want to create a Product Requirements Document (PRD) for the following topic:
 
 **Topic**: $SEED_IDEA
 
-Please follow the PRD generation process outlined in @prd/PRD-PROMPT.md - start with the discovery interview (Phase 1), asking me 3-5 questions at a time."
+Please follow the PRD generation process outlined in @prd/PRD-PROMPT.md - start with the discovery interview (Phase 1), asking me 3-5 questions at a time. Use the AskUserQuestion tool to ask your interview questions."
