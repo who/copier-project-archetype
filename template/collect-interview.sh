@@ -1,25 +1,25 @@
 #!/bin/bash
-# collect-qa.sh - Check if Q&A subtasks are complete and collect answers
+# collect-interview.sh - Check if interview subtasks are complete and collect answers
 #
-# Usage: ./collect-qa.sh <idea-id>
+# Usage: ./collect-interview.sh <idea-id>
 #
-# This script checks if all Q&A subtasks blocking an idea are closed,
+# This script checks if all interview subtasks blocking an idea are closed,
 # and if so, collects the answers into a structured format for PRD generation.
 #
 # Exit codes:
-#   0 - Success, all Q&A complete, answers collected
+#   0 - Success, all interview complete, answers collected
 #   1 - Error occurred
-#   2 - Q&A incomplete (some subtasks still open)
+#   2 - Interview incomplete (some subtasks still open)
 
 set -e
 
 IDEA_ID="$1"
 
 if [ -z "$IDEA_ID" ]; then
-    echo "Usage: ./collect-qa.sh <idea-id>"
+    echo "Usage: ./collect-interview.sh <idea-id>"
     echo ""
     echo "Example:"
-    echo "  ./collect-qa.sh myproject-abc123"
+    echo "  ./collect-interview.sh myproject-abc123"
     exit 1
 fi
 
@@ -33,27 +33,27 @@ idea_json=$(bd show "$IDEA_ID" --json 2>/dev/null) || {
 idea_title=$(echo "$idea_json" | jq -r '.[0].title // "Untitled"')
 idea_description=$(echo "$idea_json" | jq -r '.[0].description // "No description"')
 
-echo "Checking Q&A status for: $idea_title"
+echo "Checking interview status for: $idea_title"
 echo ""
 
 # Get dependencies (issues that block this idea)
-# These are the Q&A subtasks
+# These are the interview subtasks
 deps=$(echo "$idea_json" | jq -r '.[0].dependencies // []')
 dep_count=$(echo "$deps" | jq -r 'length')
 
 if [ "$dep_count" = "0" ]; then
-    echo "No Q&A subtasks found for this idea."
-    echo "Run ./generate-qa.sh $IDEA_ID first to generate questions."
+    echo "No interview subtasks found for this idea."
+    echo "Run ./generate-interview.sh $IDEA_ID first to generate questions."
     exit 2
 fi
 
-echo "Found $dep_count Q&A subtask(s)"
+echo "Found $dep_count interview subtask(s)"
 echo ""
 
 # Check status of each dependency
 open_count=0
 closed_count=0
-qa_pairs=""
+interview_pairs=""
 
 for i in $(seq 0 $((dep_count - 1))); do
     dep_id=$(echo "$deps" | jq -r ".[$i].id")
@@ -61,7 +61,7 @@ for i in $(seq 0 $((dep_count - 1))); do
     dep_status=$(echo "$deps" | jq -r ".[$i].status")
     dep_description=$(echo "$deps" | jq -r ".[$i].description // \"\"")
 
-    # Check if this looks like a Q&A subtask (title starts with "Q:")
+    # Check if this looks like an interview subtask (title starts with "Q:")
     if [[ "$dep_title" != Q:* ]]; then
         continue
     fi
@@ -91,7 +91,7 @@ for i in $(seq 0 $((dep_count - 1))); do
         fi
 
         # Append to Q&A pairs
-        qa_pairs="${qa_pairs}
+        interview_pairs="${interview_pairs}
 Q: $question
 A: $answer
 "
@@ -102,21 +102,21 @@ done
 
 echo ""
 
-# Check if all Q&A is complete
+# Check if all interview is complete
 if [ "$open_count" -gt 0 ]; then
-    echo "Q&A incomplete: $open_count question(s) still open, $closed_count closed"
+    echo "Interview incomplete: $open_count question(s) still open, $closed_count closed"
     echo "Waiting for human to answer remaining questions and close subtasks."
     exit 2
 fi
 
-echo "All Q&A complete! ($closed_count questions answered)"
+echo "All interview complete! ($closed_count questions answered)"
 echo ""
 
-# Output the collected Q&A
-output_file="prd/.qa-answers-$(echo "$IDEA_ID" | tr '[:upper:]' '[:lower:]').md"
+# Output the collected interview answers
+output_file="prd/.interview-answers-$(echo "$IDEA_ID" | tr '[:upper:]' '[:lower:]').md"
 
 cat > "$output_file" << EOF
-# Q&A Answers for: $idea_title
+# Interview Answers for: $idea_title
 
 **Idea ID**: $IDEA_ID
 **Collected**: $(date '+%Y-%m-%d %H:%M:%S')
@@ -125,11 +125,11 @@ cat > "$output_file" << EOF
 
 $idea_description
 
-## Discovery Q&A
-$qa_pairs
+## Discovery Interview
+$interview_pairs
 EOF
 
 echo "Answers collected to: $output_file"
 echo ""
 echo "Ready for PRD generation. Run:"
-echo "  ./generate-prd-from-qa.sh $IDEA_ID"
+echo "  ./generate-prd-from-interview.sh $IDEA_ID"

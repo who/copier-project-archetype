@@ -1,4 +1,4 @@
-# PRD Q&A Subtask Generation Prompt
+# PRD Interview Subtask Generation Prompt
 
 Use this prompt with Claude to generate discovery question subtasks from an idea.
 
@@ -92,10 +92,10 @@ After creating all subtasks, output:
 
 When done, output:
 ```
-<qa-complete>
+<interview-complete>
 Questions created: [count]
 Subtask IDs: [list of IDs]
-</qa-complete>
+</interview-complete>
 ```
 ```
 

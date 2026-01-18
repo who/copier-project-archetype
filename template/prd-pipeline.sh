@@ -3,17 +3,17 @@
 #
 # This script orchestrates the async PRD workflow:
 # 1. Picks up ideas assigned to 'prd-pipeline'
-# 2. Generates Q&A subtasks for discovery
+# 2. Generates interview subtasks for discovery
 # 3. Waits for human to answer questions
-# 4. Generates PRD and implementation tasks when Q&A complete
+# 4. Generates PRD and implementation tasks when interview complete
 #
 # Usage: ./prd-pipeline.sh [poll_interval]
 #   poll_interval: Seconds between checks (default: 60)
 #
 # The pipeline uses labels to track state:
-#   prd:qa-pending   - Q&A subtasks created, waiting for answers
-#   prd:qa-complete  - All Q&A answered, ready for PRD generation
-#   prd:generating   - PRD generation in progress
+#   prd:interview-pending   - Interview subtasks created, waiting for answers
+#   prd:interview-complete  - All interview answered, ready for PRD generation
+#   prd:generating          - PRD generation in progress
 #
 # Logs are written to logs/prd-pipeline-<timestamp>.log
 
@@ -51,14 +51,14 @@ process_idea() {
         return 0
     fi
 
-    if [[ "$labels" == *"prd:qa-complete"* ]]; then
-        # Q&A complete - generate PRD
-        log "  Q&A complete, generating PRD..."
+    if [[ "$labels" == *"prd:interview-complete"* ]]; then
+        # Interview complete - generate PRD
+        log "  Interview complete, generating PRD..."
         bd update "$idea_id" --label "prd:generating" 2>/dev/null || true
 
-        if ./generate-prd-from-qa.sh "$idea_id" >> "$LOG_FILE" 2>&1; then
+        if ./generate-prd-from-interview.sh "$idea_id" >> "$LOG_FILE" 2>&1; then
             log "  PRD generated successfully"
-            # Idea should be closed by generate-prd-from-qa.sh
+            # Idea should be closed by generate-prd-from-interview.sh
         else
             log "  ERROR: PRD generation failed"
             bd update "$idea_id" --remove-label "prd:generating" 2>/dev/null || true
@@ -66,34 +66,34 @@ process_idea() {
         return 0
     fi
 
-    if [[ "$labels" == *"prd:qa-pending"* ]]; then
-        # Check if Q&A is now complete
-        log "  Checking Q&A status..."
-        if ./collect-qa.sh "$idea_id" >> "$LOG_FILE" 2>&1; then
-            # Q&A complete!
-            log "  Q&A complete, marking for PRD generation"
-            bd update "$idea_id" --remove-label "prd:qa-pending" 2>/dev/null || true
-            bd update "$idea_id" --label "prd:qa-complete" 2>/dev/null || true
+    if [[ "$labels" == *"prd:interview-pending"* ]]; then
+        # Check if interview is now complete
+        log "  Checking interview status..."
+        if ./collect-interview.sh "$idea_id" >> "$LOG_FILE" 2>&1; then
+            # Interview complete!
+            log "  Interview complete, marking for PRD generation"
+            bd update "$idea_id" --remove-label "prd:interview-pending" 2>/dev/null || true
+            bd update "$idea_id" --label "prd:interview-complete" 2>/dev/null || true
         else
             local exit_code=$?
             if [ $exit_code -eq 2 ]; then
-                log "  Q&A still pending (waiting for human)"
+                log "  Interview still pending (waiting for human)"
             else
-                log "  ERROR: collect-qa.sh failed with code $exit_code"
+                log "  ERROR: collect-interview.sh failed with code $exit_code"
             fi
         fi
         return 0
     fi
 
-    # New idea - generate Q&A subtasks
-    log "  New idea, generating Q&A subtasks..."
+    # New idea - generate interview subtasks
+    log "  New idea, generating interview subtasks..."
     bd update "$idea_id" --status in_progress 2>/dev/null || true
 
-    if ./generate-qa.sh "$idea_id" >> "$LOG_FILE" 2>&1; then
-        log "  Q&A subtasks created, waiting for human answers"
-        bd update "$idea_id" --label "prd:qa-pending" 2>/dev/null || true
+    if ./generate-interview.sh "$idea_id" >> "$LOG_FILE" 2>&1; then
+        log "  Interview subtasks created, waiting for human answers"
+        bd update "$idea_id" --label "prd:interview-pending" 2>/dev/null || true
     else
-        log "  ERROR: Q&A generation failed"
+        log "  ERROR: Interview generation failed"
     fi
 }
 

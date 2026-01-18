@@ -1,31 +1,31 @@
 #!/bin/bash
-# generate-prd-from-qa.sh - Generate PRD and implementation tasks from Q&A answers
+# generate-prd-from-interview.sh - Generate PRD and implementation tasks from interview answers
 #
-# Usage: ./generate-prd-from-qa.sh <idea-id>
+# Usage: ./generate-prd-from-interview.sh <idea-id>
 #
 # This script:
-# 1. Reads the collected Q&A answers for an idea
+# 1. Reads the collected interview answers for an idea
 # 2. Generates a comprehensive PRD document
 # 3. Explodes the PRD into implementation tasks assigned to ralph
 # 4. Closes the original idea
 #
 # Prerequisites:
-# - Q&A answers collected via collect-qa.sh (prd/.qa-answers-<id>.md exists)
+# - Interview answers collected via collect-interview.sh (prd/.interview-answers-<id>.md exists)
 #
 # Exit codes:
 #   0 - Success, PRD generated and tasks created
 #   1 - Error occurred
-#   2 - Q&A answers not found (run collect-qa.sh first)
+#   2 - Interview answers not found (run collect-interview.sh first)
 
 set -e
 
 IDEA_ID="$1"
 
 if [ -z "$IDEA_ID" ]; then
-    echo "Usage: ./generate-prd-from-qa.sh <idea-id>"
+    echo "Usage: ./generate-prd-from-interview.sh <idea-id>"
     echo ""
     echo "Example:"
-    echo "  ./generate-prd-from-qa.sh myproject-abc123"
+    echo "  ./generate-prd-from-interview.sh myproject-abc123"
     exit 1
 fi
 
@@ -35,11 +35,11 @@ if ! command -v claude &> /dev/null; then
     exit 1
 fi
 
-# Check for Q&A answers file
-qa_file="prd/.qa-answers-$(echo "$IDEA_ID" | tr '[:upper:]' '[:lower:]').md"
-if [ ! -f "$qa_file" ]; then
-    echo "Error: Q&A answers not found at $qa_file"
-    echo "Run ./collect-qa.sh $IDEA_ID first to collect answers."
+# Check for interview answers file
+interview_file="prd/.interview-answers-$(echo "$IDEA_ID" | tr '[:upper:]' '[:lower:]').md"
+if [ ! -f "$interview_file" ]; then
+    echo "Error: Interview answers not found at $interview_file"
+    echo "Run ./collect-interview.sh $IDEA_ID first to collect answers."
     exit 2
 fi
 
@@ -60,8 +60,8 @@ echo "Generating PRD for: $idea_title"
 echo "Output: $prd_file"
 echo ""
 
-# Read Q&A content
-qa_content=$(cat "$qa_file")
+# Read interview content
+interview_content=$(cat "$interview_file")
 
 # Build the prompt
 prompt="Generate a comprehensive PRD document and implementation tasks.
@@ -74,8 +74,8 @@ prompt="Generate a comprehensive PRD document and implementation tasks.
 **Description**:
 $idea_description
 
-### Collected Q&A
-$qa_content
+### Collected Interview
+$interview_content
 
 ---
 

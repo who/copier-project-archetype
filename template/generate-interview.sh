@@ -1,14 +1,14 @@
 #!/bin/bash
-# generate-qa.sh - Generate Q&A subtasks from an idea bead
+# generate-interview.sh - Generate interview subtasks from an idea bead
 #
-# Usage: ./generate-qa.sh <idea-id>
+# Usage: ./generate-interview.sh <idea-id>
 #
 # This script reads an idea bead and uses Claude to generate discovery
 # question subtasks. Each question becomes a task assigned to 'human'
 # that blocks the original idea until answered.
 #
 # Exit codes:
-#   0 - Success, Q&A subtasks created
+#   0 - Success, interview subtasks created
 #   1 - Error occurred
 #   2 - Idea not found or invalid
 
@@ -17,10 +17,10 @@ set -e
 IDEA_ID="$1"
 
 if [ -z "$IDEA_ID" ]; then
-    echo "Usage: ./generate-qa.sh <idea-id>"
+    echo "Usage: ./generate-interview.sh <idea-id>"
     echo ""
     echo "Example:"
-    echo "  ./generate-qa.sh myproject-abc123"
+    echo "  ./generate-interview.sh myproject-abc123"
     exit 1
 fi
 
@@ -30,9 +30,9 @@ if ! command -v claude &> /dev/null; then
     exit 1
 fi
 
-# Check if PRD-QA-PROMPT.md exists
-if [ ! -f "prd/PRD-QA-PROMPT.md" ]; then
-    echo "Error: prd/PRD-QA-PROMPT.md not found. Are you in the project root?"
+# Check if PRD-INTERVIEW-PROMPT.md exists
+if [ ! -f "prd/PRD-INTERVIEW-PROMPT.md" ]; then
+    echo "Error: prd/PRD-INTERVIEW-PROMPT.md not found. Are you in the project root?"
     exit 1
 fi
 
@@ -143,15 +143,15 @@ After creating all subtasks, output:
 
 When done, output exactly this (with real values):
 \`\`\`
-<qa-complete>
+<interview-complete>
 Questions created: [count]
 Subtask IDs: [comma-separated list of IDs]
-</qa-complete>
+</interview-complete>
 \`\`\`"
 
 # Run Claude with the prompt
 echo "$prompt" | claude --dangerously-skip-permissions --output-format stream-json --verbose
 
 echo ""
-echo "Q&A generation complete. Human can now answer questions and close subtasks."
-echo "Once all Q&A subtasks are closed, the idea will be unblocked for PRD generation."
+echo "Interview generation complete. Human can now answer questions and close subtasks."
+echo "Once all interview subtasks are closed, the idea will be unblocked for PRD generation."
