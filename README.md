@@ -124,8 +124,8 @@ Install these tools before using generated projects:
 | Tool | Purpose |
 |------|---------|
 | [copier](https://github.com/copier-org/copier) | Project generator |
-| [beads](https://github.com/Dicklesworthstone/beads) | Issue tracking |
-| [bv](https://github.com/Dicklesworthstone/beads_viewer) | Beads TUI viewer |
+| [beads](https://github.com/steveyegge/beads) | Issue tracking |
+| [bv](https://github.com/steveyegge/beads-viewer) | Beads TUI viewer |
 | [claude](https://github.com/anthropics/claude-code) | Claude CLI |
 | [jq](https://jqlang.github.io/jq/) | JSON processing |
 | [rg](https://github.com/BurntSushi/ripgrep) | Fast search (ripgrep) |
