@@ -147,4 +147,5 @@ _skip_if_exists:
 _tasks:
   - "chmod +x ralph.sh mega-ralph.sh generate-prd.sh"
   - "git init"
+  - "git add -A && git commit -m 'Initial commit from Ortus template'"
   - "bd init"
