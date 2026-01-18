@@ -43,7 +43,7 @@ for ((i=1; i<=$ITERATIONS; i++)); do
   log "$(date '+%Y-%m-%dT%H:%M:%S%z')"
   log "--------------------------------"
 
-  result=$(claude -p "$(cat PROMPT.md)" --output-format stream-json 2>&1 | tee -a "$LOG_FILE") || true
+  result=$(claude -p "$(cat PROMPT.md)" --output-format stream-json --verbose 2>&1 | tee -a "$LOG_FILE") || true
 
   if [[ "$result" == *"<promise>COMPLETE</promise>"* ]] || [[ "$result" == *"COMPLETE"* ]]; then
     log ""

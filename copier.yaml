@@ -52,51 +52,54 @@ language:
   type: str
   help: Primary programming language
   choices:
-    Python: python
     TypeScript: typescript
+    Python: python
     Go: go
     Rust: rust
     Other: other
+  default: typescript
 
 package_manager:
   type: str
   help: Package manager to use
   choices:
-    uv (Python): uv
-    pip (Python): pip
+    bun (Node.js): bun
     npm (Node.js): npm
     pnpm (Node.js): pnpm
     yarn (Node.js): yarn
-    bun (Node.js): bun
+    uv (Python): uv
+    pip (Python): pip
     go mod (Go): gomod
     cargo (Rust): cargo
     None: none
+  default: bun
   when: "{{ language != 'other' }}"
 
 framework:
   type: str
   help: Web framework (optional)
   choices:
+    Next.js (Node.js): nextjs
     FastAPI (Python): fastapi
     Flask (Python): flask
     Django (Python): django
     Express (Node.js): express
-    Next.js (Node.js): nextjs
     Gin (Go): gin
     Actix (Rust): actix
     Axum (Rust): axum
     None: none
-  default: none
+  default: nextjs
 
 linter:
   type: str
   help: Linter to use
   choices:
-    ruff (Python): ruff
     ESLint (JavaScript/TypeScript): eslint
+    ruff (Python): ruff
     golangci-lint (Go): golangci
     clippy (Rust): clippy
     None: none
+  default: eslint
   when: "{{ language != 'other' }}"
 
 # =============================================================================
