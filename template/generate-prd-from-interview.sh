@@ -149,7 +149,9 @@ Explicitly list what this PRD does NOT cover.
 
 ### Step 2: Create Implementation Tasks
 
-After saving the PRD, create beads for implementation:
+After saving the PRD, create beads for implementation.
+
+**CRITICAL: All epics and tasks MUST include --assignee=ralph so they appear in ralph's work queue. Do NOT omit this flag.**
 
 1. **Create Epics** for each major phase/milestone:
 \`\`\`bash
@@ -162,6 +164,8 @@ bd create --title=\"[Task Name]\" --type=task --priority=2 --assignee=ralph --de
 
 Reference: $prd_file\"
 \`\`\`
+
+**Reminder: Every bd create command MUST include --assignee=ralph**
 
 3. **Set up dependencies** between tasks:
 \`\`\`bash

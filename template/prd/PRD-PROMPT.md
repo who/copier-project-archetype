@@ -171,6 +171,7 @@ Output a shell script that creates all issues with proper:
 - Blocking dependencies for sequential work
 - Labels for priority organization
 - Detailed descriptions for workers
+- **CRITICAL: Every bd create command MUST include --assignee ralph** so tasks appear in ralph's work queue
 
 Format:
 ```bash
