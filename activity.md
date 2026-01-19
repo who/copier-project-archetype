@@ -4,6 +4,22 @@ This file tracks work completed by agents and humans. Add new entries at the top
 
 ---
 
+## 2026-01-19T07:10:00-08:00 - Run prerequisite checks without adding shell script to generated project
+
+**Task**: ortus-v3j - Run prerequisite checks without adding shell script to generated project
+**Status**: Completed
+**Changes**:
+- Created `extensions/prerequisites.py` with `PrerequisiteChecker` class that runs tool availability checks during template generation
+- Updated `copier.yaml` to load the new extension
+- Added `check-prerequisites.sh` to `_exclude` list so it's not copied to generated projects
+- Removed `./check-prerequisites.sh` from `_tasks` (no longer needed)
+- Removed `check-prerequisites.sh` from chmod task list
+- Added deduplication logic to ensure checks only run once per generation
+
+**Verification**: Tested template generation - prerequisite checks run once during generation, check-prerequisites.sh is not present in generated project.
+
+---
+
 ## 2026-01-18T16:41:12-08:00 - Git config defaults for copier wizard
 
 **Task**: ortus-qom - Use git config for default author_name and author_email in copier wizard
